@@ -24,10 +24,7 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
-import kmpmovies.composeapp.generated.resources.Res
-import kmpmovies.composeapp.generated.resources.themoviedb
 import kotlinx.serialization.json.Json
-import org.jetbrains.compose.resources.stringResource
 
 //import org.koin.compose.viewmodel.koinViewModel
 //import org.koin.core.annotation.KoinExperimentalAPI
@@ -63,7 +60,6 @@ fun Navigation(moviesDao: MoviesDao) {
 
 @Composable
 private fun rememberMoviesRepository(moviesDao: MoviesDao): MoviesRepository {
-    val apiKey = stringResource(Res.string.themoviedb)
     val client = remember {
         HttpClient {
             install(ContentNegotiation) {
@@ -79,7 +75,7 @@ private fun rememberMoviesRepository(moviesDao: MoviesDao): MoviesRepository {
                 url {
                     protocol = URLProtocol.HTTPS
                     host = "api.themoviedb.org"
-                    parameters.append("api_key", apiKey)
+                    parameters.append("api_key", BuildConfig.API_KEY)
                 }
             }
         }
