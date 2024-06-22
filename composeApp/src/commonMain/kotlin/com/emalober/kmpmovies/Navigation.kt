@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.emalober.kmpmovies.data.MoviesRepository
 import com.emalober.kmpmovies.data.MoviesService
+import com.emalober.kmpmovies.data.database.MoviesDao
 import com.emalober.kmpmovies.ui.screens.detail.DetailScreen
 import com.emalober.kmpmovies.ui.screens.detail.DetailViewModel
 import com.emalober.kmpmovies.ui.screens.home.HomeScreen
@@ -34,9 +35,9 @@ import org.jetbrains.compose.resources.stringResource
 //
 //@OptIn(KoinExperimentalAPI::class)
 @Composable
-fun Navigation() {
+fun Navigation(moviesDao: MoviesDao) {
     val navController = rememberNavController()
-    val repository = rememberMoviesRepository()
+    val repository = rememberMoviesRepository(moviesDao)
 
     NavHost(navController = navController, startDestination = "home") {
 
@@ -61,7 +62,7 @@ fun Navigation() {
 }
 
 @Composable
-private fun rememberMoviesRepository(): MoviesRepository {
+private fun rememberMoviesRepository(moviesDao: MoviesDao): MoviesRepository {
     val apiKey = stringResource(Res.string.themoviedb)
     val client = remember {
         HttpClient {
@@ -83,6 +84,11 @@ private fun rememberMoviesRepository(): MoviesRepository {
             }
         }
     }
-    val repository = remember { MoviesRepository(MoviesService(client)) }
+    val repository = remember {
+        MoviesRepository(
+            moviesDao = moviesDao,
+            moviesService = MoviesService(client = client)
+        )
+    }
     return remember { repository }
 }

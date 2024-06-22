@@ -6,12 +6,13 @@ import coil3.compose.setSingletonImageLoaderFactory
 import coil3.request.crossfade
 import coil3.util.DebugLogger
 import com.emalober.kmpmovies.Navigation
+import com.emalober.kmpmovies.data.database.MoviesDao
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalCoilApi::class, ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun App() {
+fun App(moviesDao: MoviesDao) {
     setSingletonImageLoaderFactory { context ->
         ImageLoader.Builder(context)
             .crossfade(true)
@@ -19,5 +20,5 @@ fun App() {
             .build()
     }
 
-    Navigation()
+    Navigation(moviesDao)
 }

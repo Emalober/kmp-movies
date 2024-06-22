@@ -1,13 +1,29 @@
 package com.emalober.kmpmovies.data
 
-class MoviesRepository(private val moviesService: MoviesService) {
+import com.emalober.kmpmovies.data.database.MoviesDao
+import kotlinx.coroutines.flow.onEach
 
-    suspend fun fetchPopularMovies(): List<Movie> {
-        return moviesService.fetchPopularMovies().results.map { it.toDomain() }
+class MoviesRepository(
+    private val moviesDao: MoviesDao,
+    private val moviesService: MoviesService
+) {
+
+    val movies = moviesDao.fetchPopularMovies().onEach { movies ->
+        if (movies.isEmpty()) {
+            val popularMovies = moviesService.fetchPopularMovies().results.map { it.toDomain() }
+            moviesDao.save(popularMovies)
+        }
     }
 
-    suspend fun fetchMovieById(movieId: Int): Movie {
-        return moviesService.fetchMovieById(movieId).toDomain()
+    fun fetchMovieById(id: Int) = moviesDao.findMovieById(id).onEach { movie ->
+        if (movie == null) {
+            val remoteMovie = moviesService.fetchMovieById(id).toDomain()
+            moviesDao.save(listOf(remoteMovie))
+        }
+    }
+
+    suspend fun toggleFavorite(movie: Movie) {
+        moviesDao.save(listOf(movie.copy(isFavorite = !movie.isFavorite)))
     }
 
     private fun RemoteMovie.toDomain() = Movie(
