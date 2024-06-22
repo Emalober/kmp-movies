@@ -8,10 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import coil3.util.DebugLogger
 import com.emalober.kmpmovies.data.MoviesRepository
 import com.emalober.kmpmovies.data.MoviesService
-import com.emalober.kmpmovies.data.movies
 import com.emalober.kmpmovies.ui.screens.detail.DetailScreen
 import com.emalober.kmpmovies.ui.screens.detail.DetailViewModel
 import com.emalober.kmpmovies.ui.screens.home.HomeScreen
