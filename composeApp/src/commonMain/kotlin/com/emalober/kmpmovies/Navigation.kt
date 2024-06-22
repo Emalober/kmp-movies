@@ -26,22 +26,20 @@ import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-//import org.koin.compose.viewmodel.koinViewModel
-//import org.koin.core.annotation.KoinExperimentalAPI
-//import org.koin.core.parameter.parametersOf
-//
-//@OptIn(KoinExperimentalAPI::class)
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.core.parameter.parametersOf
+
+@OptIn(KoinExperimentalAPI::class)
 @Composable
-fun Navigation(moviesDao: MoviesDao) {
+fun Navigation() {
     val navController = rememberNavController()
-    val repository = rememberMoviesRepository(moviesDao)
 
     NavHost(navController = navController, startDestination = "home") {
 
         composable("home") {
             HomeScreen(
                 onMovieClick = { movie -> navController.navigate("detail/${movie.id}") },
-                vm = viewModel { HomeViewModel(repository) }
             )
         }
 
@@ -51,40 +49,8 @@ fun Navigation(moviesDao: MoviesDao) {
         ) { backStackEntry ->
             val movieId = checkNotNull(backStackEntry.arguments?.getInt("movieId"))
             DetailScreen(
-                //vm = koinViewModel(parameters = { parametersOf(movieId) }),
-                vm = viewModel { DetailViewModel(repository = repository, id = movieId) },
+                vm = koinViewModel(parameters = { parametersOf(movieId) }),
                 onBack = { navController.popBackStack() })
         }
     }
-}
-
-@Composable
-private fun rememberMoviesRepository(moviesDao: MoviesDao): MoviesRepository {
-    val client = remember {
-        HttpClient {
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                })
-            }
-            install(Logging) {
-                logger = Logger.DEFAULT
-                level = LogLevel.ALL
-            }
-            install(DefaultRequest) {
-                url {
-                    protocol = URLProtocol.HTTPS
-                    host = "api.themoviedb.org"
-                    parameters.append("api_key", BuildConfig.API_KEY)
-                }
-            }
-        }
-    }
-    val repository = remember {
-        MoviesRepository(
-            moviesDao = moviesDao,
-            moviesService = MoviesService(client = client)
-        )
-    }
-    return remember { repository }
 }
