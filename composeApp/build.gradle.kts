@@ -44,6 +44,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
+            implementation(libs.play.services.location)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -67,6 +68,8 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.moko.permissions.compose)
+
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

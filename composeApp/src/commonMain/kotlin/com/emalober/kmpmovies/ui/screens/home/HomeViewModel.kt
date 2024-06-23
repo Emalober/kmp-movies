@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emalober.kmpmovies.data.Movie
 import com.emalober.kmpmovies.data.MoviesRepository
-import com.emalober.kmpmovies.data.RemoteMovie
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -17,7 +16,7 @@ class HomeViewModel(
     var state by mutableStateOf(UiState())
         private set
 
-    init {
+    fun onUiReady() {
         viewModelScope.launch {
             state = UiState(loading = true)
             repository.movies.collect {

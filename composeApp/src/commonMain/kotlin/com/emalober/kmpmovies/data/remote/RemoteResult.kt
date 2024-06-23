@@ -1,4 +1,4 @@
-package com.emalober.kmpmovies.data
+package com.emalober.kmpmovies.data.remote
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

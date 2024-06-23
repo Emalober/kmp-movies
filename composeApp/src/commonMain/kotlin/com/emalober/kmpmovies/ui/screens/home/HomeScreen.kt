@@ -34,7 +34,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.emalober.kmpmovies.data.Movie
 import com.emalober.kmpmovies.ui.commons.LoadingIndicator
+import com.emalober.kmpmovies.ui.commons.PermissionRequestEffect
 import com.emalober.kmpmovies.ui.screens.Screen
+import dev.icerock.moko.permissions.Permission
 import kmpmovies.composeapp.generated.resources.Res
 import kmpmovies.composeapp.generated.resources.app_name
 import kmpmovies.composeapp.generated.resources.favorite
@@ -49,6 +51,10 @@ fun HomeScreen(
     onMovieClick: (Movie) -> Unit,
     vm: HomeViewModel = koinViewModel()
 ) {
+    PermissionRequestEffect(Permission.COARSE_LOCATION) {
+        vm.onUiReady()
+    }
+
     Screen {
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         Scaffold(

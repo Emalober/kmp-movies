@@ -1,10 +1,10 @@
 package com.emalober.kmpmovies
 
-
 import androidx.room.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.emalober.kmpmovies.data.MoviesRepository
-import com.emalober.kmpmovies.data.MoviesService
+import com.emalober.kmpmovies.data.RegionRepository
+import com.emalober.kmpmovies.data.remote.MoviesService
 import com.emalober.kmpmovies.data.database.MoviesDao
 import com.emalober.kmpmovies.data.database.MoviesDatabase
 import com.emalober.kmpmovies.ui.screens.detail.DetailViewModel
@@ -48,9 +48,8 @@ val dataModule = module {
             }
         }
     }
-
+    factoryOf(::RegionRepository)
     factoryOf(::MoviesRepository)
-//    factoryOf(::RegionRepository)
     factoryOf(::MoviesService)
 }
 

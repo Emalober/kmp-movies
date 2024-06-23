@@ -1,16 +1,20 @@
 package com.emalober.kmpmovies.data
 
 import com.emalober.kmpmovies.data.database.MoviesDao
+import com.emalober.kmpmovies.data.remote.MoviesService
+import com.emalober.kmpmovies.data.remote.RemoteMovie
 import kotlinx.coroutines.flow.onEach
 
 class MoviesRepository(
     private val moviesDao: MoviesDao,
-    private val moviesService: MoviesService
+    private val moviesService: MoviesService,
+    private val regionRepository: RegionRepository
 ) {
 
     val movies = moviesDao.fetchPopularMovies().onEach { movies ->
         if (movies.isEmpty()) {
-            val popularMovies = moviesService.fetchPopularMovies().results.map { it.toDomain() }
+            val popularMovies =
+                moviesService.fetchPopularMovies(regionRepository.fetchRegion()).results.map { it.toDomain() }
             moviesDao.save(popularMovies)
         }
     }
